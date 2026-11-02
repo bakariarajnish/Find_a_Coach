@@ -1,5 +1,8 @@
 <template>
   <section>
+    <coach-filter @filter-change="updatedFilter"></coach-filter>
+  </section>
+  <section>
     <base-card>
       <div class="controls">
         <base-button mode="outline">Refresh List</base-button>
@@ -24,15 +27,39 @@
 
 <script>
 import Coach from '../../components/coach/Coach.vue';
-import BaseButton from '../../components/ui/BaseButton.vue';
+import CoachFilter from '../../components/coach/CoachFilter.vue';
 export default {
-  components: { Coach, BaseButton },
+  components: { Coach, CoachFilter },
+  data() {
+    return {
+      filters: {
+        frontend: true,
+        backend: true,
+        career: true,
+      },
+    };
+  },
   computed: {
     filterCoaches() {
-      return this.$store.getters['coach/getAllCoaches'];
+      const coaches = this.$store.getters['coach/getAllCoaches'];
+      const filteredCoaches = [];
+      for (let coach of coaches) {
+        for (let filter in this.filters) {
+          if (this.filters[filter] == true && coach.areas.includes(filter)) {
+            filteredCoaches.push(coach);
+            break;
+          }
+        }
+      }
+      return filteredCoaches;
     },
     hasCoaches() {
       return this.$store.getters['coach/hasCoaches'];
+    },
+  },
+  methods: {
+    updatedFilter(filters) {
+      this.filters = filters;
     },
   },
 };
