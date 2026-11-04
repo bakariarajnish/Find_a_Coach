@@ -7,10 +7,26 @@ const store = createStore({
     coach: CoachModule,
     request: RequestModule,
   },
-  state() {},
-  mutations: {},
-  getters: {},
-  actions: {},
+  state() {
+    return {
+      loggedInCoach: null,
+    };
+  },
+  mutations: {
+    updateLoggedInCoach(state, payload) {
+      state.loggedInCoach = payload.coachId;
+    },
+  },
+  getters: {
+    getLoggedInCoachId(state) {
+      return state.loggedInCoach;
+    },
+  },
+  actions: {
+    loggedInCoach(context, data) {
+      context.commit('updateLoggedInCoach', data);
+    },
+  },
 });
 
 export default store;

@@ -24,8 +24,26 @@ export default {
       ],
     };
   },
-  mutations: {},
-  actions: {},
+  mutations: {
+    saveCoachData(state, newCoachData) {
+      state.coaches.push(newCoachData);
+    },
+  },
+  actions: {
+    addNewCoach(context, data) {
+      const coachId = new Date().toISOString();
+      const coachData = {
+        id: coachId,
+        firstName: data.first,
+        lastName: data.last,
+        description: data.description,
+        hourlyRate: data.rate,
+        areas: data.areas,
+      };
+      context.dispatch('loggedInCoach', { coachId: coachId }, { root: true });
+      context.commit('saveCoachData', coachData);
+    },
+  },
   getters: {
     getAllCoaches(state) {
       return state.coaches;

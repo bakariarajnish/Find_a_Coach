@@ -6,7 +6,9 @@
     <base-card>
       <div class="controls">
         <base-button mode="outline">Refresh List</base-button>
-        <base-button isLink to="/register">Register as Coach</base-button>
+        <base-button isLink to="/register" v-if="!isCoachLoggedIn"
+          >Register as Coach</base-button
+        >
       </div>
       <ul v-if="hasCoaches">
         <li v-for="coach in filterCoaches" :key="coach.id">
@@ -55,6 +57,9 @@ export default {
     },
     hasCoaches() {
       return this.$store.getters['coach/hasCoaches'];
+    },
+    isCoachLoggedIn() {
+      return this.$store.getters['getLoggedInCoachId'];
     },
   },
   methods: {
