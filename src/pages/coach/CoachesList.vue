@@ -1,4 +1,7 @@
 <template>
+  <base-dialog :show="!!error" title="Error" @close="closeDialog">
+    <p>{{ error }}</p>
+  </base-dialog>
   <section>
     <coach-filter @filter-change="updatedFilter"></coach-filter>
   </section>
@@ -12,9 +15,7 @@
           >Register as Coach</base-button
         >
       </div>
-      <div v-if="isLoading">
-        <base-spinner></base-spinner>
-      </div>
+      <base-spinner v-if="isLoading"></base-spinner>
       <ul v-else-if="hasCoaches">
         <li v-for="coach in filterCoaches" :key="coach.id">
           <Coach
@@ -35,11 +36,13 @@
 <script>
 import Coach from '../../components/coach/Coach.vue';
 import CoachFilter from '../../components/coach/CoachFilter.vue';
+import BaseDialog from '../../components/ui/BaseDialog.vue';
 export default {
-  components: { Coach, CoachFilter },
+  components: { Coach, CoachFilter, BaseDialog },
   data() {
     return {
       isLoading: false,
+      error: null,
       filters: {
         frontend: true,
         backend: true,
@@ -77,8 +80,16 @@ export default {
     },
     async loadCoaches() {
       this.isLoading = true;
-      await this.$store.dispatch('coach/loadCoachesData');
+      try {
+        await this.$store.dispatch('coach/loadCoachesData');
+      } catch (error) {
+        this.error = error.message || 'Some issue while fetching data.';
+      }
+
       this.isLoading = false;
+    },
+    closeDialog() {
+      this.error = null;
     },
   },
 };

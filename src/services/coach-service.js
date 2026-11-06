@@ -4,7 +4,8 @@ export async function fetchCoachesData() {
   );
   const responseData = await response.json();
   if (!response.ok) {
-    //handle error
+    const error = new Error(responseData.message || 'Unable to fetch data');
+    throw error;
   }
   const coaches = [];
   for (let key in responseData) {
