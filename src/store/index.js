@@ -9,7 +9,7 @@ const store = createStore({
   },
   state() {
     return {
-      loggedInCoach: null,
+      loggedInCoach: 'C3',
     };
   },
   mutations: {
@@ -19,7 +19,6 @@ const store = createStore({
   },
   getters: {
     getLoggedInCoachId(state) {
-      console.log(state.loggedInCoach);
       return state.loggedInCoach;
     },
   },

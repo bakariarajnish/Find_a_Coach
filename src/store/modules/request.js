@@ -1,3 +1,8 @@
+import {
+  saveRequestData,
+  getRequestsData,
+} from '../../services/request-service';
+
 export default {
   namespaced: true,
   state() {
@@ -9,16 +14,24 @@ export default {
     addNewRequest(state, payload) {
       state.requests.push(payload);
     },
+    AllRequest(state, payload) {
+      state.requests = payload;
+    },
   },
   actions: {
     contactCoach(context, data) {
       const requestData = {
-        id: new Date().toISOString(),
         coachId: data.coachId,
         userEmail: data.email,
         message: data.message,
       };
+      saveRequestData(requestData);
       context.commit('addNewRequest', requestData);
+    },
+    async loadRequestData(context) {
+      const coachId = context.rootGetters['getLoggedInCoachId'];
+      const requestData = await getRequestsData(coachId);
+      context.commit('AllRequest', requestData);
     },
   },
   getters: {

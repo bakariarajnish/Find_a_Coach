@@ -1,9 +1,18 @@
 <template>
+  <base-dialog
+    v-if="hasError"
+    title="Error"
+    :show="hasError"
+    @close="closeModal"
+  >
+    <p>{{ error }}</p>
+  </base-dialog>
   <base-card>
     <header>
       <h2>Request Received</h2>
     </header>
-    <ul v-if="hasRequests">
+    <base-spinner v-if="isLoading"></base-spinner>
+    <ul v-else-if="hasRequests">
       <request
         :email="request.userEmail"
         :message="request.message"
@@ -16,16 +25,44 @@
 </template>
 
 <script>
+import BaseDialog from '../../components/ui/BaseDialog.vue';
 import Request from './Request.vue';
 export default {
-  components: { Request },
+  components: { Request, BaseDialog },
+  data() {
+    return {
+      isLoading: false,
+      error: null,
+    };
+  },
+  methods: {
+    async fetchAllRequest() {
+      this.isLoading = true;
+      try {
+        await this.$store.dispatch('request/loadRequestData');
+        this.isLoading = false;
+      } catch (error) {
+        this.isLoading = false;
+        this.error = error.message || 'Unable to fetch requests';
+      }
+    },
+    closeModal() {
+      this.error = null;
+    },
+  },
   computed: {
     requests() {
-      return this.$store.getters['request/getCoachSpecificRequest'];
+      return this.$store.getters['request/getAllRequests'];
     },
     hasRequests() {
-      return this.$store.getters['request/hasRequests'];
+      return !this.isLoading && this.$store.getters['request/hasRequests'];
     },
+    hasError() {
+      return !!this.error;
+    },
+  },
+  created() {
+    this.fetchAllRequest();
   },
 };
 </script>
