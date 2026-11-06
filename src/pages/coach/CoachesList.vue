@@ -5,7 +5,9 @@
   <section>
     <base-card>
       <div class="controls">
-        <base-button mode="outline">Refresh List</base-button>
+        <base-button mode="outline" @click="loadCoaches"
+          >Refresh List</base-button
+        >
         <base-button isLink to="/register" v-if="!isCoachLoggedIn"
           >Register as Coach</base-button
         >
@@ -62,9 +64,15 @@ export default {
       return this.$store.getters['getLoggedInCoachId'];
     },
   },
+  created() {
+    this.loadCoaches();
+  },
   methods: {
     updatedFilter(filters) {
       this.filters = filters;
+    },
+    loadCoaches() {
+      this.$store.dispatch('coach/loadCoachesData');
     },
   },
 };

@@ -9,7 +9,9 @@
     <base-card>
       <header>
         <h2>Interested? Reach out now!</h2>
-        <base-button isLink :to="contactLink">Contact</base-button>
+        <base-button v-if="!isNotContactPage" isLink :to="contactLink"
+          >Contact</base-button
+        >
       </header>
       <router-view></router-view>
     </base-card>
@@ -39,15 +41,16 @@ export default {
     this.selectedCoach = this.$store.getters['coach/getAllCoaches'].find(
       (coach) => coach.id === this.coachId
     );
-
-    console.log(this.selectedCoach);
   },
   computed: {
     fullName() {
       return this.selectedCoach.firstName + ' ' + this.selectedCoach.lastName;
     },
     contactLink() {
-      return this.$route.path + '/' + this.selectedCoach.id + '/contact';
+      return this.$route.path + '/contact';
+    },
+    isNotContactPage() {
+      return this.$route.path.includes('/contact') ? true : false;
     },
   },
 };

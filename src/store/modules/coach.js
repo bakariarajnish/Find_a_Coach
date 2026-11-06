@@ -1,3 +1,5 @@
+import { fetchCoachesData } from '../../services/coach-service';
+
 export default {
   namespaced: true,
   state() {
@@ -28,20 +30,40 @@ export default {
     saveCoachData(state, newCoachData) {
       state.coaches.push(newCoachData);
     },
+    loadCoachData(state, payload) {
+      state.coaches = payload;
+    },
   },
   actions: {
-    addNewCoach(context, data) {
-      const coachId = new Date().toISOString();
+    async addNewCoach(context, data) {
+      const coachId = 'C3';
       const coachData = {
-        id: coachId,
         firstName: data.first,
         lastName: data.last,
         description: data.description,
         hourlyRate: data.rate,
         areas: data.areas,
       };
-      context.dispatch('loggedInCoach', { coachId: coachId }, { root: true });
-      context.commit('saveCoachData', coachData);
+
+      const response = await fetch(
+        `https://find-a-coach-e6fed-default-rtdb.firebaseio.com/coaches/${coachId}.json`,
+        {
+          method: 'PUT',
+          body: JSON.stringify(coachData),
+        }
+      );
+      const responseData = await response.json();
+      if (!response.ok) {
+        //handle error
+      } else {
+        console.log(responseData);
+        context.dispatch('loggedInCoach', { coachId: coachId }, { root: true });
+        context.commit('saveCoachData', coachData);
+      }
+    },
+    async loadCoachesData(context) {
+      const coachesData = await fetchCoachesData();
+      context.commit('loadCoachData', coachesData);
     },
   },
   getters: {
