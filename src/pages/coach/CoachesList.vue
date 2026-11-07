@@ -8,7 +8,7 @@
   <section>
     <base-card>
       <div class="controls">
-        <base-button mode="outline" @click="loadCoaches"
+        <base-button mode="outline" @click="loadCoaches(true)"
           >Refresh List</base-button
         >
         <base-button isLink to="/register" v-if="!isCoachLoggedIn"
@@ -78,7 +78,10 @@ export default {
     updatedFilter(filters) {
       this.filters = filters;
     },
-    async loadCoaches() {
+    async loadCoaches(reloadRequired = false) {
+      if (!reloadRequired && !this.isLatestCoachesListRequired()) {
+        return;
+      }
       this.isLoading = true;
       try {
         await this.$store.dispatch('coach/loadCoachesData');
@@ -90,6 +93,20 @@ export default {
     },
     closeDialog() {
       this.error = null;
+    },
+    isLatestCoachesListRequired() {
+      const lastLoadedTime = this.$store.getters['coach/getLastRefreshTime'];
+      if (lastLoadedTime === null) {
+        this.$store.dispatch('coach/updateLastTimeCoachesLoaded');
+      } else {
+        const currentTime = new Date().getTime();
+        const isNewDataRequired = (currentTime - lastLoadedTime) / 1000 > 60;
+        if (isNewDataRequired) {
+          this.$store.dispatch('coach/updateLastTimeCoachesLoaded');
+          return true;
+        }
+        return false;
+      }
     },
   },
 };

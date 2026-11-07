@@ -4,6 +4,7 @@ export default {
   namespaced: true,
   state() {
     return {
+      timeLastCoachesLoaded: null,
       coaches: [
         {
           id: 'c1',
@@ -33,10 +34,13 @@ export default {
     loadCoachData(state, payload) {
       state.coaches = payload;
     },
+    saveLastTimeCoachesLoaded(state) {
+      state.timeLastCoachesLoaded = new Date().getTime();
+    },
   },
   actions: {
     async addNewCoach(context, data) {
-      const coachId = 'C3';
+      const coachId = context.rootGetters.getLoggedInCoachId;
       const coachData = {
         firstName: data.first,
         lastName: data.last,
@@ -65,6 +69,9 @@ export default {
       const coachesData = await fetchCoachesData();
       context.commit('loadCoachData', coachesData);
     },
+    updateLastTimeCoachesLoaded(context) {
+      context.commit('saveLastTimeCoachesLoaded');
+    },
   },
   getters: {
     getAllCoaches(state) {
@@ -72,6 +79,9 @@ export default {
     },
     hasCoaches(state) {
       return state.coaches && state.coaches.length > 0;
+    },
+    getLastRefreshTime(state) {
+      return state.timeLastCoachesLoaded;
     },
   },
 };
