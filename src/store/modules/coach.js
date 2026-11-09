@@ -48,9 +48,11 @@ export default {
         hourlyRate: data.rate,
         areas: data.areas,
       };
-
+      const token = context.rootGetters.getToken;
+      console.log('CONTEXT', context);
+      console.log('TOKEN', token);
       const response = await fetch(
-        `https://find-a-coach-e6fed-default-rtdb.firebaseio.com/coaches/${coachId}.json`,
+        `https://find-a-coach-e6fed-default-rtdb.firebaseio.com/coaches/${coachId}.json?auth=${token}`,
         {
           method: 'PUT',
           body: JSON.stringify(coachData),
@@ -82,6 +84,15 @@ export default {
     },
     getLastRefreshTime(state) {
       return state.timeLastCoachesLoaded;
+    },
+    getCoachDetail(state, getters, rootState) {
+      return rootState.auth.loggedInCoach;
+    },
+    isRegisteredAsCoach(state, getters) {
+      let isRegisteredAsCoach = state.coaches.findIndex(
+        (coach) => coach.id === getters.getCoachDetail
+      );
+      return isRegisteredAsCoach === -1 ? false : true;
     },
   },
 };

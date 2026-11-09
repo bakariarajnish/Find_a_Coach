@@ -12,8 +12,14 @@
           <base-button mode="outline" @click="loadCoaches(true)"
             >Refresh List</base-button
           >
-          <base-button isLink to="/register" v-if="!isCoachLoggedIn"
+          <base-button
+            isLink
+            to="/register"
+            v-if="!isRegistredAsCoach && isCoachLoggedIn"
             >Register as Coach</base-button
+          >
+          <base-button isLink to="/login" v-if="!isCoachLoggedIn"
+            >Login</base-button
           >
         </div>
         <base-spinner v-if="isLoading"></base-spinner>
@@ -38,9 +44,10 @@
 <script>
 import Coach from '../../components/coach/Coach.vue';
 import CoachFilter from '../../components/coach/CoachFilter.vue';
+import BaseButton from '../../components/ui/BaseButton.vue';
 import BaseDialog from '../../components/ui/BaseDialog.vue';
 export default {
-  components: { Coach, CoachFilter, BaseDialog },
+  components: { Coach, CoachFilter, BaseDialog, BaseButton },
   data() {
     return {
       isLoading: false,
@@ -70,7 +77,12 @@ export default {
       return !this.isLoading && this.$store.getters['coach/hasCoaches'];
     },
     isCoachLoggedIn() {
-      return this.$store.getters['getLoggedInCoachId'];
+      return this.$store.getters['coach/getCoachDetail'] !== null
+        ? true
+        : false;
+    },
+    isRegistredAsCoach() {
+      return this.$store.getters['coach/isRegisteredAsCoach'];
     },
   },
   created() {

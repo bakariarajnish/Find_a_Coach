@@ -22,11 +22,11 @@ export default {
     getLoggedInCoachId(state) {
       return state.loggedInCoach;
     },
+    getToken(state) {
+      return state.token;
+    },
   },
   actions: {
-    // loggedInCoach(context, data) {
-    //   context.commit('updateLoggedInCoach', data);
-    // },
     async signUp(context, data) {
       const response = await authenticateUser(data, 'Signup');
       context.commit('setCoach', {
@@ -40,7 +40,14 @@ export default {
       context.commit('setCoach', {
         loginCoachId: response.localId,
         token: response.idToken,
-        tokenExpiration: response.expiresIn,
+        tokenExpiresIn: response.expiresIn,
+      });
+    },
+    logout(context) {
+      context.commit('setCoach', {
+        loginCoachId: null,
+        token: null,
+        tokenExpiresIn: null,
       });
     },
   },

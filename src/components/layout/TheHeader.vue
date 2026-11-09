@@ -4,16 +4,39 @@
       <h1><router-link to="/">Find a Coach</router-link></h1>
       <ul>
         <li><router-link to="/coaches">All Coaches</router-link></li>
-        <li><router-link to="/requests">Requests</router-link></li>
-        <li><router-link to="/login">Login</router-link></li>
-        <li><router-link to="/register">Register</router-link></li>
+        <li v-if="isCoachLoggedIn">
+          <router-link to="/requests">Requests</router-link>
+        </li>
+        <li v-else><router-link to="/login">Login</router-link></li>
+        <li v-if="isCoachLoggedIn && !isNotRegisteredAsCoach">
+          <router-link to="/register">Register</router-link>
+        </li>
+        <li v-if="isCoachLoggedIn">
+          <base-button @click="logout">Logout</base-button>
+        </li>
       </ul>
     </nav>
   </header>
 </template>
 
 <script>
-export default {};
+export default {
+  computed: {
+    isCoachLoggedIn() {
+      return this.$store.getters['coach/getCoachDetail'] !== null
+        ? true
+        : false;
+    },
+    isNotRegisteredAsCoach() {
+      return this.$store.getters['coach/isRegisteredAsCoach'];
+    },
+  },
+  methods: {
+    logout() {
+      this.$store.dispatch('logout');
+    },
+  },
+};
 </script>
 
 <style scoped>

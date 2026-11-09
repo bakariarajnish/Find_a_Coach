@@ -30,7 +30,9 @@ export default {
     },
     async loadRequestData(context) {
       const coachId = context.rootGetters['getLoggedInCoachId'];
-      const requestData = await getRequestsData(coachId);
+      const token = context.rootGetters.getToken;
+      console.log('TOK', token);
+      const requestData = await getRequestsData(coachId, token);
       context.commit('AllRequest', requestData);
     },
   },

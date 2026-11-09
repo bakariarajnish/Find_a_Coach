@@ -1,16 +1,16 @@
 export async function saveRequestData(data) {
-  return handleRequest(data);
+  return handleRequest(data, '');
 }
 
-export async function getRequestsData(coachId) {
-  const allRequests = await handleRequest({});
+export async function getRequestsData(coachId, token) {
+  const allRequests = await handleRequest({}, token);
   const parseRequest = [];
   for (let key in allRequests) {
     const request = {
       id: key,
       ...allRequests[key],
     };
-    parseRequest.push(request);
+    parseRequest.push(request, token);
   }
   const filteredRequest = parseRequest.filter(
     (request) => request.coachId === coachId
@@ -18,10 +18,13 @@ export async function getRequestsData(coachId) {
   return filteredRequest;
 }
 
-async function handleRequest(data) {
+async function handleRequest(data, vToken) {
   const objLength = Object.keys(data).length;
+  let URL =
+    'https://find-a-coach-e6fed-default-rtdb.firebaseio.com/requests.json';
+  URL = objLength === 0 ? URL + '?auth=' + vToken : URL;
   const response = await fetch(
-    'https://find-a-coach-e6fed-default-rtdb.firebaseio.com/requests.json',
+    URL,
     objLength === 0
       ? { method: 'get' }
       : { method: 'post', body: JSON.stringify(data) }
