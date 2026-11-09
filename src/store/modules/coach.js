@@ -61,7 +61,7 @@ export default {
         //handle error
       } else {
         console.log(responseData);
-        context.dispatch('loggedInCoach', { coachId: coachId }, { root: true });
+        //context.dispatch('loggedInCoach', { coachId: coachId }, { root: true });
         context.commit('saveCoachData', coachData);
       }
     },

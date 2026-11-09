@@ -1,31 +1,13 @@
 import { createStore } from 'vuex';
 import CoachModule from './modules/coach.js';
 import RequestModule from './modules/request.js';
+import AuthModule from './modules/auth.js';
 
 const store = createStore({
   modules: {
     coach: CoachModule,
     request: RequestModule,
-  },
-  state() {
-    return {
-      loggedInCoach: 'C3',
-    };
-  },
-  mutations: {
-    updateLoggedInCoach(state, payload) {
-      state.loggedInCoach = payload.coachId;
-    },
-  },
-  getters: {
-    getLoggedInCoachId(state) {
-      return state.loggedInCoach;
-    },
-  },
-  actions: {
-    loggedInCoach(context, data) {
-      context.commit('updateLoggedInCoach', data);
-    },
+    auth: AuthModule,
   },
 });
 

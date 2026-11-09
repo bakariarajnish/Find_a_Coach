@@ -1,36 +1,38 @@
 <template>
-  <base-dialog :show="!!error" title="Error" @close="closeDialog">
-    <p>{{ error }}</p>
-  </base-dialog>
-  <section>
-    <coach-filter @filter-change="updatedFilter"></coach-filter>
-  </section>
-  <section>
-    <base-card>
-      <div class="controls">
-        <base-button mode="outline" @click="loadCoaches(true)"
-          >Refresh List</base-button
-        >
-        <base-button isLink to="/register" v-if="!isCoachLoggedIn"
-          >Register as Coach</base-button
-        >
-      </div>
-      <base-spinner v-if="isLoading"></base-spinner>
-      <ul v-else-if="hasCoaches">
-        <li v-for="coach in filterCoaches" :key="coach.id">
-          <Coach
-            :id="coach.id"
-            :key="coach.id"
-            :firstName="coach.firstName"
-            :lastName="coach.lastName"
-            :areas="coach.areas"
-            :rate="coach.hourlyRate"
-          ></Coach>
-        </li>
-      </ul>
-      <h3 v-else>No Coaches found.</h3>
-    </base-card>
-  </section>
+  <div>
+    <base-dialog :show="!!error" title="Error" @close="closeDialog">
+      <p>{{ error }}</p>
+    </base-dialog>
+    <section>
+      <coach-filter @filter-change="updatedFilter"></coach-filter>
+    </section>
+    <section>
+      <base-card>
+        <div class="controls">
+          <base-button mode="outline" @click="loadCoaches(true)"
+            >Refresh List</base-button
+          >
+          <base-button isLink to="/register" v-if="!isCoachLoggedIn"
+            >Register as Coach</base-button
+          >
+        </div>
+        <base-spinner v-if="isLoading"></base-spinner>
+        <ul v-else-if="hasCoaches">
+          <li v-for="coach in filterCoaches" :key="coach.id">
+            <Coach
+              :id="coach.id"
+              :key="coach.id"
+              :firstName="coach.firstName"
+              :lastName="coach.lastName"
+              :areas="coach.areas"
+              :rate="coach.hourlyRate"
+            ></Coach>
+          </li>
+        </ul>
+        <h3 v-else>No Coaches found.</h3>
+      </base-card>
+    </section>
+  </div>
 </template>
 
 <script>
