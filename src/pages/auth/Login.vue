@@ -66,6 +66,8 @@ export default {
         } else if (this.authMode === 'Signup') {
           await this.$store.dispatch('signUp', loginData);
         }
+        const redirectURL = '/' + (this.$route.query.redirect || 'coaches');
+        this.$router.replace(redirectURL);
       } catch (error) {
         console.log(error.message);
         if (error.message === 'EMAIL_EXISTS') {

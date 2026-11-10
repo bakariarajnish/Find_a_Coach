@@ -1,7 +1,7 @@
-export async function authenticateUser(data, requestType) {
+export async function authenticateUser(data) {
   const API_KEY = '';
   let URL = 'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=';
-  if (requestType === 'login') {
+  if (data.mode === 'login') {
     URL =
       'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=';
   }

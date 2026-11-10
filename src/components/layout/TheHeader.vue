@@ -4,11 +4,13 @@
       <h1><router-link to="/">Find a Coach</router-link></h1>
       <ul>
         <li><router-link to="/coaches">All Coaches</router-link></li>
-        <li v-if="isCoachLoggedIn">
+        <li v-if="isCoachLoggedIn && isRegisteredAsCoach">
           <router-link to="/requests">Requests</router-link>
         </li>
-        <li v-else><router-link to="/login">Login</router-link></li>
-        <li v-if="isCoachLoggedIn && !isNotRegisteredAsCoach">
+        <li v-else-if="!isCoachLoggedIn">
+          <router-link to="/login">Login</router-link>
+        </li>
+        <li v-if="isCoachLoggedIn && !isRegisteredAsCoach">
           <router-link to="/register">Register</router-link>
         </li>
         <li v-if="isCoachLoggedIn">
@@ -27,13 +29,14 @@ export default {
         ? true
         : false;
     },
-    isNotRegisteredAsCoach() {
+    isRegisteredAsCoach() {
       return this.$store.getters['coach/isRegisteredAsCoach'];
     },
   },
   methods: {
     logout() {
       this.$store.dispatch('logout');
+      this.$router.replace('/coaches');
     },
   },
 };

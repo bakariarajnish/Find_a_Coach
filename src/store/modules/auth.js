@@ -28,20 +28,30 @@ export default {
   },
   actions: {
     async signUp(context, data) {
-      const response = await authenticateUser(data, 'Signup');
-      context.commit('setCoach', {
-        loginCoachId: response.localId,
-        token: response.idToken,
-        tokenExpiration: response.expiresIn,
-      });
+      return context.dispatch('auth', { ...data, mode: 'signup' });
     },
     async login(context, data) {
-      const response = await authenticateUser(data, 'login');
+      return context.dispatch('auth', { ...data, mode: 'login' });
+    },
+    async auth(context, data) {
+      const response = await authenticateUser(data);
+      localStorage.setItem('token', response.idToken);
+      localStorage.setItem('loginCoachId', response.localId);
       context.commit('setCoach', {
         loginCoachId: response.localId,
         token: response.idToken,
         tokenExpiresIn: response.expiresIn,
       });
+    },
+    autoLogin(context) {
+      const token = localStorage.getItem('token');
+      const loginCoachId = localStorage.getItem('loginCoachId');
+      if (token && loginCoachId) {
+        context.commit('setCoach', {
+          token,
+          loginCoachId,
+        });
+      }
     },
     logout(context) {
       context.commit('setCoach', {
