@@ -96,6 +96,7 @@ export default {
       this.filters = filters;
     },
     async loadCoaches(reloadRequired = false) {
+      console.log('reloadRequired', reloadRequired);
       if (!reloadRequired && !this.isLatestCoachesListRequired()) {
         return;
       }
@@ -113,7 +114,7 @@ export default {
     },
     isLatestCoachesListRequired() {
       const lastLoadedTime = this.$store.getters['coach/getLastRefreshTime'];
-      if (lastLoadedTime === null) {
+      if (lastLoadedTime == null) {
         this.$store.dispatch('coach/updateLastTimeCoachesLoaded');
       } else {
         const currentTime = new Date().getTime();
@@ -124,6 +125,8 @@ export default {
         }
         return false;
       }
+      console.log('RRRR');
+      return true;
     },
   },
 };
