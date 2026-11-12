@@ -3,12 +3,13 @@ import { createRouter, createWebHistory } from 'vue-router';
 import store from './store/index.js';
 
 import CoachesList from './pages/coach/CoachesList.vue';
-import CoachDetail from './pages/coach/CoachDetail.vue';
-import ContactCoach from './pages/coach/ContactCoach.vue';
 import Login from './pages/auth/Login.vue';
-import Register from './pages/auth/Register.vue';
 import RequestList from './pages/request/RequestList.vue';
 import NotFound from './NotFound.vue';
+
+const RegisterPage = () => import('./pages/auth/Register.vue');
+const ContactCoach = () => import('./pages/coach/ContactCoach.vue');
+const CoachDetail = () => import('./pages/coach/CoachDetail.vue');
 
 const routes = createRouter({
   history: createWebHistory(),
@@ -39,7 +40,7 @@ const routes = createRouter({
     },
     {
       path: '/register',
-      component: Register,
+      component: RegisterPage,
       meta: { isAuthenticated: true },
     },
     {
